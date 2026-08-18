@@ -17,7 +17,7 @@ export default function Navbar() {
     <header className="nav">
       <div className="container nav-inner">
         <NavLink to="/" className="nav-logo" onClick={() => setOpen(false)}>
-          <span className="nav-logo-mark" aria-hidden="true" />
+          <img src="/logo.jpg" alt="" className="nav-logo-img" aria-hidden="true" />
           Growthguru<span className="nav-logo-accent">.</span>
         </NavLink>
 

@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container footer-inner">
         <div>
           <div className="nav-logo" style={{ marginBottom: 10 }}>
-            <span className="nav-logo-mark" aria-hidden="true" />
+            <img src="/logo.jpg" alt="" className="nav-logo-img" aria-hidden="true" />
             Growthguru<span className="nav-logo-accent">.</span>
           </div>
           <p style={{ maxWidth: 340 }}>
