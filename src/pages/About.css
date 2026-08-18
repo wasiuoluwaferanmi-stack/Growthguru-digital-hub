@@ -1,0 +1,31 @@
+.about-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.about-photo-wrap {
+  position: sticky;
+  top: 100px;
+}
+
+.about-photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center 15%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.about-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 860px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .about-photo-wrap { position: static; max-width: 280px; }
+}

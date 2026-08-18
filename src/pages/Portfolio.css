@@ -1,0 +1,20 @@
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.portfolio-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.portfolio-card-body {
+  padding: 22px 24px 26px;
+}
+
+@media (max-width: 860px) {
+  .portfolio-grid { grid-template-columns: 1fr; }
+}
