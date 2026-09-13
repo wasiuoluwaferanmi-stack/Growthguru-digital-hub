@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
+import Reveal from '../components/Reveal.jsx'
 
 const services = [
   {
     title: 'Digital Infrastructure & Web',
-    items: ['Website design (Wix, Shopify, custom-coded)', 'Website optimization', 'E-commerce setup & storefront management'],
+    items: ['Website design (Wix, Shopify, systeme.io, custom-coded)', 'Website optimization', 'E-commerce setup & storefront management'],
   },
   {
     title: 'Automation & Systems',
@@ -23,25 +24,28 @@ export default function Services() {
   return (
     <section className="section" style={{ paddingTop: 64, borderBottom: 'none' }}>
       <div className="container">
-        <span className="eyebrow">Services</span>
-        <h1 style={{ maxWidth: 620, fontSize: 'clamp(28px, 3.6vw, 40px)' }}>
-          Everything a business needs to stop running on manual effort.
-        </h1>
-        <p style={{ maxWidth: 520, marginBottom: 56 }}>
-          Each service is built inside the tools your team already knows —
-          no rip-and-replace, no learning curve for a system nobody asked for.
-        </p>
+        <Reveal>
+          <span className="eyebrow">Services</span>
+          <h1 style={{ maxWidth: 620, fontSize: 'clamp(28px, 3.6vw, 40px)' }}>
+            Everything a business needs to stop running on manual effort.
+          </h1>
+          <p style={{ maxWidth: 520, marginBottom: 56 }}>
+            The site, the systems, and the marketing behind them — each built inside
+            the tools your team already knows. No rip-and-replace, no learning curve
+            for a system nobody asked for.
+          </p>
+        </Reveal>
 
         <div className="grid-2" style={{ rowGap: 32 }}>
-          {services.map((s) => (
-            <div className="card" key={s.title}>
+          {services.map((s, i) => (
+            <Reveal as="div" className="card" key={s.title} delay={i * 80}>
               <h2 style={{ fontSize: 20, marginBottom: 18 }}>{s.title}</h2>
               <ul style={{ margin: 0, paddingLeft: 18, color: 'var(--text-muted)' }}>
                 {s.items.map((i) => (
                   <li key={i} style={{ marginBottom: 8, fontSize: 14.5 }}>{i}</li>
                 ))}
               </ul>
-            </div>
+            </Reveal>
           ))}
         </div>
 

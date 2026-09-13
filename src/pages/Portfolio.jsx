@@ -1,28 +1,30 @@
 import Carousel from '../components/Carousel.jsx'
+import Reveal from '../components/Reveal.jsx'
 import '../components/Carousel.css'
 import './Portfolio.css'
 
 const projects = [
   {
     tag: 'Event Planning',
-    title: 'HoneyBook Smart File & Workflow System',
-    body: 'Built a complete client booking system — from first inquiry to signed contract — for an event planning business. The system covers the service package smart file, a branded client experience portal, and a multi-step automated questionnaire that captures everything needed before a call ever happens.',
+    title: 'Custom Client Onboarding & CRM Pipeline',
+    body: 'Automated cross-platform data mapping within HoneyBook CRM, completely eliminating manual operational latency during the client discovery phase — from first inquiry to a branded client experience portal.',
     stack: ['HoneyBook', 'Workflow Automation'],
     images: [
-      '/images/portfolio/honeybook-1.png',
-      '/images/portfolio/honeybook-2.png',
-      '/images/portfolio/honeybook-3.png',
+      '/images/portfolio/honeybook-1.webp',
+      '/images/portfolio/honeybook-2.webp',
+      '/images/portfolio/honeybook-3.webp',
     ],
   },
   {
     tag: 'Real Estate',
-    title: 'GoHighLevel Lead Funnel & Automation',
-    body: 'Designed and deployed a full GoHighLevel automation system for a real estate client — lead allocation, credit-based nurture sequences, appointment intake notifications, and priority filtering, so no lead sits untouched waiting for a manual follow-up.',
-    stack: ['GoHighLevel', 'Lead Automation'],
+    title: 'Holywell Hall: Luxury Estate Management ERP',
+    body: 'Engineered a comprehensive, multi-layer asset tracking system for a premium UK luxury estate — quick task assignment, contractor compliance registers, live defect monitoring, calendar timelines, and expense tracking, shifting the operation from manual chaos into decentralized administrative automation.',
+    stack: ['Notion', 'Automation', 'Asset Tracking'],
     images: [
-      '/images/portfolio/ghl-1.png',
-      '/images/portfolio/ghl-2.png',
-      '/images/portfolio/ghl-3.png',
+      '/images/portfolio/holywell-1.webp',
+      '/images/portfolio/holywell-2.webp',
+      '/images/portfolio/holywell-3.webp',
+      '/images/portfolio/holywell-4.webp',
     ],
   },
   {
@@ -37,13 +39,15 @@ const projects = [
   },
   {
     tag: 'SaaS Product',
-    title: 'WiseGen — Content Repurposing SaaS',
-    body: 'Built a content repurposing product from the ground up — turning one LinkedIn post or idea into ten authority-building content formats (hooks, carousels, newsletters, threads) in under a minute. Built with Lovable, Supabase, Clerk, the OpenAI API, and Stripe for subscription billing.',
+    title: 'WiseGen: B2B AI Content Multiplier SaaS',
+    body: 'Architected a full-scale content repurposing SaaS platform utilizing modern frontend views, deep backend API integrations, and robust database models — turning a single idea into multi-format, authority-building B2B content assets in under 60 seconds. Built with Lovable, Supabase, Clerk, the OpenAI API, and Stripe for subscription billing.',
     stack: ['Lovable', 'Supabase', 'Clerk', 'OpenAI API', 'Stripe'],
     images: [
-      '/images/portfolio/saas-1.png',
-      '/images/portfolio/saas-2.png',
-      '/images/portfolio/saas-3.png',
+      '/images/portfolio/wisegen-1.webp',
+      '/images/portfolio/wisegen-2.webp',
+      '/images/portfolio/wisegen-3.webp',
+      '/images/portfolio/wisegen-4.webp',
+      '/images/portfolio/wisegen-5.webp',
     ],
   },
 ]
@@ -52,21 +56,23 @@ export default function Portfolio() {
   return (
     <section className="section" style={{ paddingTop: 64, borderBottom: 'none' }}>
       <div className="container">
-        <span className="eyebrow">Portfolio</span>
-        <h1 style={{ maxWidth: 620, fontSize: 'clamp(28px, 3.6vw, 40px)' }}>
-          Real systems, built for real businesses.
-        </h1>
-        <p style={{ maxWidth: 520, marginBottom: 56 }}>
-          A selection of the automation and development work delivered over
-          the last four years.
-        </p>
+        <Reveal>
+          <span className="eyebrow">Portfolio</span>
+          <h1 style={{ maxWidth: 620, fontSize: 'clamp(28px, 3.6vw, 40px)' }}>
+            Sites, systems, and products — built for real businesses.
+          </h1>
+          <p style={{ maxWidth: 520, marginBottom: 56 }}>
+            A selection of the web, automation, and product work delivered over
+            the last four years.
+          </p>
+        </Reveal>
 
         <div className="portfolio-grid">
-          {projects.map((p) => (
-            <div className="portfolio-card" key={p.title}>
+          {projects.map((p, i) => (
+            <Reveal as="div" className="portfolio-card" key={p.title} delay={(i % 2) * 100}>
               <Carousel images={p.images} alt={p.title} />
               <div className="portfolio-card-body">
-                <span className="tag">{p.tag}</span>
+                <span className={`tag ${p.tagAccent || ''}`}>{p.tag}</span>
                 <h2 style={{ fontSize: 19, margin: '12px 0 10px' }}>{p.title}</h2>
                 <p style={{ marginBottom: 14, fontSize: 14.5 }}>{p.body}</p>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -75,7 +81,7 @@ export default function Portfolio() {
                   ))}
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
