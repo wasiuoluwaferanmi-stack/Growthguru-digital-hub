@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 export default function Carousel({ images, alt }) {
   const [index, setIndex] = useState(0)
@@ -75,7 +76,7 @@ export default function Carousel({ images, alt }) {
         </div>
       )}
 
-      {lightboxOpen && (
+      {lightboxOpen && createPortal(
         <div
           className="lightbox-overlay"
           onClick={() => setLightboxOpen(false)}
@@ -131,7 +132,8 @@ export default function Carousel({ images, alt }) {
               </div>
             </>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )

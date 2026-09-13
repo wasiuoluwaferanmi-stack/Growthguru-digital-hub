@@ -13,8 +13,7 @@ export default function Footer() {
             Growthguru<span className="nav-logo-accent">.</span>
           </div>
           <p style={{ maxWidth: 340 }}>
-            CRM automation, no-code development, and digital marketing systems —
-            built by Wasiu Akeem Oluwaferanmi.
+            Engineered by Growthguru Hub.
           </p>
         </div>
 
