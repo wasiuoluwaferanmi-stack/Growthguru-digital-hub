@@ -150,3 +150,40 @@ img { max-width: 100%; display: block; }
 }
 
 ::selection { background: var(--accent); color: #14100A; }
+
+/* ===== Scroll reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Full-width split section (image/text side by side) ===== */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.split-reverse { grid-template-columns: 1fr 1fr; }
+.split-reverse .split-media { order: 2; }
+.split-reverse .split-copy { order: 1; }
+
+@media (max-width: 860px) {
+  .split, .split-reverse { grid-template-columns: 1fr; }
+  .split-reverse .split-media { order: -1; }
+}
+
+/* ===== Tag color variants ===== */
+.tag-accent-web {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.tag-accent-flow {
+  border-color: var(--flow-dim);
+  color: var(--flow);
+}
