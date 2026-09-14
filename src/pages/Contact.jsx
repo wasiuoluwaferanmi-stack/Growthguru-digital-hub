@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { supabase } from '../supabaseClient.js'
 import './Contact.css'
 
 export default function Contact() {
-  const [result, setResult] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isError, setIsError] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  useEffect(() => {
+    if (!showSuccess) return
+    const onKeyDown = (e) => { if (e.key === 'Escape') setShowSuccess(false) }
+    document.addEventListener('keydown', onKeyDown)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [showSuccess])
 
   const onSubmit = async (event) => {
     event.preventDefault()
     setIsSubmitting(true)
-    setIsError(false)
-    setResult('Sending your request...')
+    setErrorMessage('')
 
     const formEl = event.target
     const formData = new FormData(formEl)
@@ -46,11 +58,10 @@ export default function Contact() {
     if (!dbOk && !dbResult.value?.skipped) console.log('Supabase error', dbResult)
 
     if (emailOk || dbOk) {
-      setResult('Systems blueprint received! Our architecture studio will contact you shortly.')
       formEl.reset()
+      setShowSuccess(true)
     } else {
-      setIsError(true)
-      setResult('Connection timeout. Please email info@growthguru.digital directly.')
+      setErrorMessage('Connection timeout. Please email info@growthguru.digital directly.')
     }
 
     setIsSubmitting(false)
@@ -103,13 +114,45 @@ export default function Contact() {
             {isSubmitting ? 'Sending…' : 'Send message →'}
           </button>
 
-          {result && (
-            <p className={`form-note ${isError ? 'form-note-error' : 'form-note-ok'}`}>
-              {result}
-            </p>
+          {errorMessage && (
+            <p className="form-note form-note-error">{errorMessage}</p>
           )}
         </form>
       </div>
+
+      {showSuccess && createPortal(
+        <div
+          className="success-overlay"
+          onClick={() => setShowSuccess(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Message sent confirmation"
+        >
+          <div className="success-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="success-close"
+              onClick={() => setShowSuccess(false)}
+              aria-label="Close"
+              type="button"
+            >
+              ×
+            </button>
+            <span className="success-icon">✓</span>
+            <h2 className="success-title">Systems blueprint received.</h2>
+            <p className="success-body">
+              Our architecture studio will contact you shortly.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowSuccess(false)}
+              type="button"
+            >
+              Close
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
     </section>
   )
 }
