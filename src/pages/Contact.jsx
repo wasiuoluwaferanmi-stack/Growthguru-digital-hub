@@ -3,38 +3,57 @@ import { supabase } from '../supabaseClient.js'
 import './Contact.css'
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', project: '', message: '' })
-  const [status, setStatus] = useState('idle') // idle | sending | sent | error | unconfigured
+  const [result, setResult] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isError, setIsError] = useState(false)
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    setIsSubmitting(true)
+    setIsError(false)
+    setResult('Sending your request...')
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+    const formEl = event.target
+    const formData = new FormData(formEl)
+    const name = formData.get('name')
+    const email = formData.get('email')
+    const company = formData.get('company')
+    const message = formData.get('message')
 
-    if (!supabase) {
-      setStatus('unconfigured')
-      return
-    }
+    formData.append('access_key', 'aede57d7-bdd1-442d-b216-7bd1fdee44ac')
+    formData.append('subject', 'New Inbound Studio Lead — Growthguru Hub')
+    formData.append('from_name', 'Growthguru Digital Inquiries')
 
-    setStatus('sending')
-    const { error } = await supabase.from('contact_submissions').insert([
-      {
-        name: form.name,
-        email: form.email,
-        project: form.project,
-        message: form.message,
-      },
-    ])
+    // Two independent channels: Web3Forms emails you instantly, Supabase
+    // keeps a permanent, queryable record. Either one succeeding counts
+    // as the message getting through — they don't depend on each other.
+    const emailRequest = fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: formData,
+    }).then((res) => res.json())
 
-    if (error) {
-      console.error(error)
-      setStatus('error')
+    const dbRequest = supabase
+      ? supabase.from('contact_submissions').insert([{ name, email, company, message }])
+      : Promise.resolve({ skipped: true })
+
+    const [emailResult, dbResult] = await Promise.allSettled([emailRequest, dbRequest])
+
+    const emailOk = emailResult.status === 'fulfilled' && emailResult.value?.success
+    const dbOk = dbResult.status === 'fulfilled' && !dbResult.value?.error
+
+    if (!emailOk) console.log('Web3Forms error', emailResult)
+    if (!dbOk && !dbResult.value?.skipped) console.log('Supabase error', dbResult)
+
+    if (emailOk || dbOk) {
+      setResult('Systems blueprint received! Our architecture studio will contact you shortly.')
+      formEl.reset()
     } else {
-      setStatus('sent')
-      setForm({ name: '', email: '', project: '', message: '' })
+      setIsError(true)
+      setResult('Connection timeout. Please email info@growthguru.digital directly.')
     }
+
+    setIsSubmitting(false)
   }
 
   return (
@@ -57,34 +76,38 @@ export default function Contact() {
           </div>
         </div>
 
-        <form className="card contact-form" onSubmit={handleSubmit}>
+        <form className="card contact-form" onSubmit={onSubmit}>
+          <input type="checkbox" name="botcheck" className="hidden-field" tabIndex="-1" autoComplete="off" />
+
           <label className="field">
             <span>Name</span>
-            <input name="name" value={form.name} onChange={handleChange} required />
+            <input name="name" required />
           </label>
 
           <label className="field">
             <span>Email</span>
-            <input type="email" name="email" value={form.email} onChange={handleChange} required />
+            <input type="email" name="email" required />
           </label>
 
           <label className="field">
-            <span>What do you need help with?</span>
-            <input name="project" value={form.project} onChange={handleChange} placeholder="e.g. CRM setup, website, marketing, automation" />
+            <span>Company / Business</span>
+            <input name="company" placeholder="e.g. Epifany Experiences" />
           </label>
 
           <label className="field">
             <span>Message</span>
-            <textarea name="message" rows="4" value={form.message} onChange={handleChange} required />
+            <textarea name="message" rows="4" required placeholder="What do you need help with — CRM setup, website, marketing, automation?" />
           </label>
 
-          <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
-            {status === 'sending' ? 'Sending…' : 'Send message →'}
+          <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending…' : 'Send message →'}
           </button>
 
-          {status === 'sent' && <p className="form-note form-note-ok">Message sent — I'll be in touch soon.</p>}
-          {status === 'error' && <p className="form-note form-note-error">Something went wrong. Please try again or reach out on X/Facebook.</p>}
-          {status === 'unconfigured' && <p className="form-note form-note-error">Form isn't connected yet — reach out on X or Facebook for now.</p>}
+          {result && (
+            <p className={`form-note ${isError ? 'form-note-error' : 'form-note-ok'}`}>
+              {result}
+            </p>
+          )}
         </form>
       </div>
     </section>
