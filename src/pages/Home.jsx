@@ -49,8 +49,8 @@ export default function Home() {
           </div>
           <div className="hero-visual">
             <img
-              src="/images/hero-visual.webp"
-              alt="Diagram of a website connected to CRM, database, and automation, feeding social media, email marketing, paid ads, and content marketing"
+              src="/images/hero-visual-2.webp"
+              alt="Diagram of a modern business website connected to CRM, database, and automation, feeding social media, email marketing, paid ads, and content marketing"
               className="hero-visual-img"
             />
           </div>

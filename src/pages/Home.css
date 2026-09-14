@@ -2,8 +2,8 @@
 
 .hero-inner {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 56px;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 48px;
   align-items: center;
 }
 
@@ -51,11 +51,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: -32px;
 }
 
 .hero-visual-img {
   width: 100%;
-  max-width: 480px;
+  max-width: 640px;
   height: auto;
   border-radius: var(--radius);
 }
