@@ -1,10 +1,14 @@
 .hero { padding: 88px 0 96px; border-bottom: 1px solid var(--border); }
 
+.hero .container {
+  max-width: 1320px;
+}
+
 .hero-inner {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 48px;
-  align-items: center;
+  grid-template-columns: 0.95fr 1.25fr;
+  gap: 40px;
+  align-items: start;
 }
 
 .hero-title {
@@ -51,12 +55,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -32px;
+  margin-top: 6px;
 }
 
 .hero-visual-img {
   width: 100%;
-  max-width: 640px;
+  max-width: 780px;
   height: auto;
   border-radius: var(--radius);
 }
