@@ -36,9 +36,9 @@ export default function Contact() {
     formData.append('subject', 'New Inbound Studio Lead — Growthguru Hub')
     formData.append('from_name', 'Growthguru Digital Inquiries')
 
-    // Two independent channels: Web3Forms emails you instantly, Supabase
-    // keeps a permanent, queryable record. Either one succeeding counts
-    // as the message getting through — they don't depend on each other.
+    // Three independent channels: Web3Forms emails you instantly, Supabase
+    // keeps a permanent, queryable record, and the Make webhook triggers
+    // the lead-response automation. None of them depend on each other.
     const emailRequest = fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { Accept: 'application/json' },
@@ -49,13 +49,25 @@ export default function Contact() {
       ? supabase.from('contact_submissions').insert([{ name, email, company, message }])
       : Promise.resolve({ skipped: true })
 
-    const [emailResult, dbResult] = await Promise.allSettled([emailRequest, dbRequest])
+    const webhookRequest = fetch('https://hook.eu1.make.com/snrvscdx7hf6n9lt2fou2w9cqvuxa89x', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, company, message }),
+    })
+
+    const [emailResult, dbResult, webhookResult] = await Promise.allSettled([
+      emailRequest,
+      dbRequest,
+      webhookRequest,
+    ])
 
     const emailOk = emailResult.status === 'fulfilled' && emailResult.value?.success
     const dbOk = dbResult.status === 'fulfilled' && !dbResult.value?.error
+    const webhookOk = webhookResult.status === 'fulfilled' && webhookResult.value?.ok
 
     if (!emailOk) console.log('Web3Forms error', emailResult)
     if (!dbOk && !dbResult.value?.skipped) console.log('Supabase error', dbResult)
+    if (!webhookOk) console.log('Make webhook error', webhookResult)
 
     if (emailOk || dbOk) {
       formEl.reset()
